@@ -8,9 +8,11 @@
     const boardGame = document.getElementById('board');
     const startGame = document.getElementById('start');
     const finishGame = document.getElementById('finish');
-    const startButton = document.querySelector('.button');
+    const startButton = document.querySelector('.start');
     const message = document.querySelector('.message');
     const newGameButton = document.querySelector('.newButton');
+    const pvpButton = document.querySelector('.pvp');
+    const pvcButton = document.querySelector('.pvc');
     
     class Board {
         constructor() {
@@ -37,20 +39,25 @@
     const newBoard = new Board();
     
     class Player {
-        constructor(playerNumber) {
+        constructor(playerNumber, numWord) {
             this.playerNumber = playerNumber;
             this.activePlayer = document.getElementById(`player${playerNumber}`);
             this.playerMoves = [];
+            this.name = document.getElementById(`player-${numWord}-name`);
         }
     }
-    const playerOne = new Player(1);
-    const playerTwo = new Player(2);
+    const playerOne = new Player(1, 'one');
+    const playerTwo = new Player(2, 'two');
+    const computer = new Player(2, 'two')
 
     //Startup Screen Page Load using IIFE
     var startScreen = (function() {
         boardGame.style.display = 'none';
         finishGame.style.display = 'none';
         startGame.style.display = 'block';
+        startButton.style.display = 'none';
+        playerOne.name.style.display = 'none';
+        playerTwo.name.style.display = 'none';
         finishGame.classList.add('active');
         playerOneActive();
     }());
@@ -161,12 +168,12 @@
         //finishGame.classList.remove('active');
         if( playerOne.activePlayer.classList.contains('active')) {
             finishGame.classList.add('screen-win-one');
-            message.textContent = 'Player One Wins';
+            message.textContent = playerOne.name.value + ' Wins';
         }
         
         if( playerTwo.activePlayer.classList.contains('active')) {
             finishGame.classList.add('screen-win-two');
-            message.textContent = 'Player Two Wins';
+            message.textContent = playerTwo.name.value + ' Wins';
         }
     }
 
@@ -180,8 +187,8 @@
     //Event Handlers
     //New Game Button. Resets all the game classes and arrays
     newGameButton.addEventListener('click', (e) => {
-        boardGame.style.display = 'none';
-        startGame.style.display = 'block';
+        boardGame.style.display = 'block';
+        startGame.style.display = 'none';
         finishGame.style.display = 'none';
         playerOne.playerMoves.length = 0;
         playerTwo.playerMoves.length = 0;
@@ -201,8 +208,35 @@
         boardGame.style.display = 'block';
         startGame.style.display = 'none';
         finishGame.style.display = 'none';
+        const liOne = document.createElement('li');
+        liOne.textContent = playerOne.name.value;
+        playerOne.activePlayer.appendChild(liOne);
+        const liTwo = document.createElement('li');
+        liTwo.textContent = playerTwo.name.value;
+        playerTwo.activePlayer.appendChild(liTwo);
     });
     
+    //Event listener for pvp button
+    pvpButton.addEventListener('click', (e) => {
+        playerOne.name.style.display = 'inline-block';
+        playerTwo.name.style.display = 'inline-block';
+        pvpButton.style.display = 'none';
+        pvcButton.style.display = 'none';
+        startButton.style.display = 'inline-block';
+    });
+
+    pvcButton.addEventListener('click', (e) => {
+        playerOne.name.style.display = 'inline-block';
+        playerTwo.name.style.display = 'none';
+        pvpButton.style.display = 'none';
+        pvcButton.style.display = 'none';
+        startButton.style.display = 'inline-block';
+        const liTwo = document.createElement('li');
+        liTwo.textContent = 'Computer';
+        playerTwo.activePlayer.appendChild(liTwo);
+    });
+        
+        
     newBoard.boxes.addEventListener('mouseover', (e) => {
        var mouseoverTarget;
        mouseoverTarget = e.target;
@@ -246,3 +280,12 @@
 
 //Works for single horizontal win
 //            const testCoord3 = sortCoords.filter(sortCoord => sortCoord.charAt(0) === '2');
+
+//Original Startup Screen Page Load using IIFE
+//    var startScreen = (function() {
+//        boardGame.style.display = 'none';
+//        finishGame.style.display = 'none';
+//        startGame.style.display = 'block';
+//        finishGame.classList.add('active');
+//        playerOneActive();
+//    }());
