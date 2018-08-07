@@ -165,7 +165,7 @@ const  ticTacToeModule = (function() {
             }
            
          nBoard[openSpot] = move.index;
-         allMoves.push(move);
+         allMoves.push(move);    
         });
         var bestMove;
         if(player === computer.activePlayer) {
@@ -275,17 +275,25 @@ const  ticTacToeModule = (function() {
 
     //Game End Screen
     function endGame(winner) {
-        boardGame.style.display = 'none';
-        startGame.style.display = 'none';
-        finishGame.style.display = 'block';
-        if( winner === playerOne.playerMoves) {
-            finishGame.classList.add('screen-win-one');
-            message.textContent = playerOne.name.value + ' Wins';
-        }
-        
-        if( winner === playerTwo.playerMoves || winner === computer.playerMoves) {
-            finishGame.classList.add('screen-win-two');
-            message.textContent = playerTwo.name.value + ' Wins';
+        setTimeout(delay, 500);
+        function delay() {
+            boardGame.style.display = 'none';
+            startGame.style.display = 'none';
+            finishGame.style.display = 'block';
+            if( winner === playerOne.playerMoves) {
+                finishGame.classList.add('screen-win-one');
+                message.textContent = playerOne.name.value + ' Wins';
+            }
+
+            if( winner === playerTwo.playerMoves || winner === computer.playerMoves) {
+                finishGame.classList.add('screen-win-two');
+                if(winner === playerTwo.playerMoves) {
+                    message.textContent = playerTwo.name.value + ' Wins';
+                } else {
+
+                    message.textContent = computer.name.value + ' Wins';
+                }
+            }    
         }
     }
 
@@ -323,10 +331,25 @@ const  ticTacToeModule = (function() {
         startGame.style.display = 'none';
         finishGame.style.display = 'none';
         const liOne = document.createElement('li');
-        liOne.textContent = playerOne.name.value;
+        if(playerOne.name.value === "") {
+            liOne.textContent = "Player One";
+            playerOne.name.value = "Player One";
+        } else {
+            liOne.textContent = playerOne.name.value;
+        }
         playerOne.activePlayer.appendChild(liOne);
         const liTwo = document.createElement('li');
-        liTwo.textContent = playerTwo.name.value;
+        if(computer.activePlayer.classList.contains('comp') === false) {
+            if(playerTwo.name.value === "") {
+                liTwo.textContent = "Player Two";
+                playerTwo.name.value = "Player Two";
+            } else {
+           liTwo.textContent = playerTwo.name.value;
+            }
+        } else {
+            liTwo.textContent = 'Computer';
+            playerTwo.name.value = "Computer";
+        }
         playerTwo.activePlayer.appendChild(liTwo);
     });
     
@@ -345,9 +368,9 @@ const  ticTacToeModule = (function() {
         pvpButton.style.display = 'none';
         pvcButton.style.display = 'none';
         startButton.style.display = 'inline-block';
-        const liTwo = document.createElement('li');
-        liTwo.textContent = 'Computer';
-        playerTwo.activePlayer.appendChild(liTwo);
+//        const liTwo = document.createElement('li');
+//        liTwo.textContent = 'Computer';
+//        playerTwo.activePlayer.appendChild(liTwo);
         computer.activePlayer.classList.add('comp');
     });
         
