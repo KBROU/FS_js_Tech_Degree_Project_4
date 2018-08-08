@@ -14,7 +14,7 @@ const  ticTacToeModule = (function() {
     const newGameButton = document.querySelector('.newButton');
     const pvpButton = document.querySelector('.pvp');
     const pvcButton = document.querySelector('.pvc');
-    
+    //created a class for the board to store all board related variables
     class Board {
         constructor() {
             this.boxes = document.querySelector('.boxes');
@@ -46,7 +46,7 @@ const  ticTacToeModule = (function() {
     const newBoard = new Board();
     const fullBoard = newBoard.allBoxesArray.map(full => full.getAttribute('data-row') + full.getAttribute('data-col'));
     
-
+    //created a class for the player to store all releated variables
     class Player {
         constructor(playerNumber, numWord) {
             this.playerNumber = playerNumber;
@@ -73,18 +73,19 @@ const  ticTacToeModule = (function() {
 
     
     //Game Play
+    //toggle player one between active and not active depending on turn
     function playerOneActive() {
         playerOne.activePlayer.classList.add('active');
         playerTwo.activePlayer.classList.remove('active');
         computer.activePlayer.classList.remove('active');
     }   
-    
+    //toggle player two between active and not active depending on turn
     function playerTwoActive() {
         playerOne.activePlayer.classList.remove('active');
         playerTwo.activePlayer.classList.add('active');
     }
        
-    
+    //displays players symbol when they mouse over the box
     function boxDisplay(mouseoverTarget) {
         if (mouseoverTarget.classList.contains('alreadySelected') === false){
             
@@ -98,17 +99,17 @@ const  ticTacToeModule = (function() {
             
         }
     }
-    
+    //removes players symbol when they mouse out of the box
     function boxDisplayNone(mouseoutTarget) {
         if (mouseoutTarget.classList.contains('alreadySelected') === false){
             mouseoutTarget.style.backgroundImage = 'none';
         }
     }
-    
+    //Computer player functions
     function emptySpaces(board) {
       return board.filter(emptySpace => emptySpace != "O" && emptySpace != "X")
     }
-
+    //Calculates winning board for computer minimax algorithm
     function pvcWinner (board, player) {
         if (
          (board[0] == player.getAttribute('nameVal') && 
@@ -141,7 +142,7 @@ const  ticTacToeModule = (function() {
             return false;
          }
     }
-
+    //minimax algorithm to determine best move for computer player
     function compMinimax (nBoard, player) {
         var openSpots = emptySpaces(nBoard);
         if(pvcWinner(nBoard, playerOne.activePlayer)) {
@@ -187,9 +188,7 @@ const  ticTacToeModule = (function() {
         }
         return allMoves[bestMove];
     }
-    
-    
-
+    //function that handles player clicks 
     function inputPlayerMove(clickTarget) {
         if (clickTarget.classList.contains('alreadySelected') === false && computer.activePlayer.classList.contains('comp') === false){
             
@@ -227,7 +226,7 @@ const  ticTacToeModule = (function() {
                 return computerMove();
             }
     }
-
+    //runs minimax function for comptuter vs player
     function computerMove() {
         compMinimax(newBoard.compBoard, computer.activePlayer);
         var compMove = compMinimax(newBoard.compBoard, computer.activePlayer).index
@@ -242,13 +241,12 @@ const  ticTacToeModule = (function() {
         return playerOneActive();
     }
 
-   //idea use filter to and charAt to filter out columns and rows     
+   //function to check for a winner     
     function checkForWinner(playerTurn) {
         if (playerOne.playerMoves.length > 2 || playerTwo.playerMoves.length > 2 || computer.playerMoves.length > 2) {
             
             const moveCoords = playerTurn.map(moveCoord => moveCoord.getAttribute('data-row') + moveCoord.getAttribute('data-col'));
             const sortCoords = moveCoords.sort();
-            console.log(sortCoords);
             var testCoord1 = [];
             var testCoord2 = [];
             var testCoord3 = [];
@@ -274,6 +272,7 @@ const  ticTacToeModule = (function() {
     }
 
     //Game End Screen
+    //endGame function displays the winning screen and the player who won
     function endGame(winner) {
         setTimeout(delay, 500);
         function delay() {
@@ -296,7 +295,7 @@ const  ticTacToeModule = (function() {
             }    
         }
     }
-
+    //tie function displays a tie
     function tie() {
         boardGame.style.display = 'none';
         startGame.style.display = 'none';
@@ -325,7 +324,7 @@ const  ticTacToeModule = (function() {
             box2.style.cursor = 'pointer';
         });            
     });
-    //Event Listener for star button to begin the game
+    //Event Listener for start button to begin the game
     startButton.addEventListener('click', (e) => {
         boardGame.style.display = 'block';
         startGame.style.display = 'none';
@@ -361,7 +360,7 @@ const  ticTacToeModule = (function() {
         pvcButton.style.display = 'none';
         startButton.style.display = 'inline-block';
     });
-
+    //Event listener for pvc button
     pvcButton.addEventListener('click', (e) => {
         playerOne.name.style.display = 'inline-block';
         playerTwo.name.style.display = 'none';
